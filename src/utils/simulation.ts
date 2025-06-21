@@ -1,4 +1,3 @@
-
 import { CreatureType, FoodType } from '@/components/EvolutionSimulator';
 
 export const generateFood = (id: string, worldWidth: number, worldHeight: number): FoodType => {
@@ -6,8 +5,8 @@ export const generateFood = (id: string, worldWidth: number, worldHeight: number
     id,
     x: Math.random() * (worldWidth - 20) + 10,
     y: Math.random() * (worldHeight - 20) + 10,
-    energy: 20 + Math.random() * 30, // 20 to 50 energy
-    size: 4 + Math.random() * 4, // 4 to 8 size
+    energy: 30 + Math.random() * 40, // Increased from 20-50 to 30-70 energy
+    size: 4 + Math.random() * 4, // Keep same size
   };
 };
 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,10 +36,10 @@ export interface FoodType {
 
 const WORLD_WIDTH = 800;
 const WORLD_HEIGHT = 600;
-const INITIAL_CREATURES = 20;
-const INITIAL_FOOD = 30;
-const FOOD_SPAWN_RATE = 0.3;
-const MAX_FOOD = 50;
+const INITIAL_CREATURES = 25; // Increased from 20
+const INITIAL_FOOD = 40; // Increased from 30
+const FOOD_SPAWN_RATE = 0.4; // Increased from 0.3
+const MAX_FOOD = 60; // Increased from 50
 
 const EvolutionSimulator = () => {
   const [creatures, setCreatures] = useState<CreatureType[]>([]);
@@ -76,11 +75,11 @@ const EvolutionSimulator = () => {
       newCreatures = newCreatures.map(creature => {
         let updatedCreature = { ...creature };
         
-        // Age the creature
-        updatedCreature.age += 1;
+        // Age the creature (slower aging)
+        updatedCreature.age += 0.8; // Reduced from 1 to 0.8
         
-        // Decrease energy over time (metabolism)
-        updatedCreature.energy -= 0.5 / updatedCreature.efficiency;
+        // Decrease energy over time (reduced metabolism)
+        updatedCreature.energy -= 0.3 / updatedCreature.efficiency; // Reduced from 0.5
         
         // Update position
         updatedCreature = updateCreaturePosition(updatedCreature, WORLD_WIDTH, WORLD_HEIGHT);
@@ -120,9 +119,9 @@ const EvolutionSimulator = () => {
       let reproductions = 0;
       let deaths = 0;
       
-      // Reproduction
+      // Reproduction (easier conditions)
       const reproducingCreatures = newCreatures.filter(
-        creature => creature.energy > creature.maxEnergy * 0.8
+        creature => creature.energy > creature.maxEnergy * 0.7 // Reduced from 0.8 to 0.7
       );
       
       if (reproducingCreatures.length >= 2) {
@@ -133,24 +132,24 @@ const EvolutionSimulator = () => {
           const offspring = reproduceCreatures(parent1, parent2, WORLD_WIDTH, WORLD_HEIGHT);
           newCreatures.push(offspring);
           
-          // Reduce parent energy
+          // Reduce parent energy less drastically
           const parent1Index = newCreatures.findIndex(c => c.id === parent1.id);
           const parent2Index = newCreatures.findIndex(c => c.id === parent2.id);
           
           if (parent1Index !== -1) {
-            newCreatures[parent1Index].energy *= 0.6;
+            newCreatures[parent1Index].energy *= 0.75; // Reduced from 0.6 to 0.75
           }
           if (parent2Index !== -1) {
-            newCreatures[parent2Index].energy *= 0.6;
+            newCreatures[parent2Index].energy *= 0.75; // Reduced from 0.6 to 0.75
           }
           
           reproductions++;
         }
       }
       
-      // Death from energy depletion or old age
+      // Death from energy depletion or old age (more forgiving)
       newCreatures = newCreatures.filter(creature => {
-        const dies = creature.energy <= 0 || creature.age > creature.maxAge;
+        const dies = creature.energy <= -10 || creature.age > creature.maxAge * 1.2; // Allow negative energy buffer and extended age
         if (dies) deaths++;
         return !dies;
       });
